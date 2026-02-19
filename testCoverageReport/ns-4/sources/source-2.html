@@ -1,0 +1,159 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GlobalExceptionHandler</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.toolstore.demo.exception</a>
+</div>
+
+<h1>Coverage Summary for Class: GlobalExceptionHandler (com.toolstore.demo.exception)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GlobalExceptionHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.3%
+  </span>
+  <span class="absValue">
+    (5/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    86.7%
+  </span>
+  <span class="absValue">
+    (13/15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.toolstore.demo.exception;
+&nbsp;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.validation.FieldError;
+&nbsp;import org.springframework.web.bind.MethodArgumentNotValidException;
+&nbsp;import org.springframework.web.bind.annotation.ExceptionHandler;
+&nbsp;import org.springframework.web.bind.annotation.RestControllerAdvice;
+&nbsp;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@RestControllerAdvice
+<b class="fc">&nbsp;public class GlobalExceptionHandler {</b>
+&nbsp;
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);</b>
+&nbsp;
+&nbsp;    // Handles Business Rule Validations (e.g., Rental days &lt; 1, Discount % range)
+&nbsp;    @ExceptionHandler(IllegalArgumentException.class)
+&nbsp;    public ResponseEntity&lt;ErrorResponse&gt; handleBusinessValidation(IllegalArgumentException ex) {
+<b class="fc">&nbsp;        logger.error(&quot;Checkout Validation Failed: {}&quot;, ex.getMessage());</b>
+<b class="fc">&nbsp;        return buildResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Handles JSR-303 / Spring Boot Request Body Validations
+&nbsp;    @ExceptionHandler(MethodArgumentNotValidException.class)
+&nbsp;    public ResponseEntity&lt;ErrorResponse&gt; handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+<b class="fc">&nbsp;        String message = ex.getBindingResult()</b>
+<b class="fc">&nbsp;                .getFieldErrors()</b>
+<b class="fc">&nbsp;                .stream()</b>
+<b class="fc">&nbsp;                .map(FieldError::getDefaultMessage)</b>
+<b class="fc">&nbsp;                .collect(Collectors.joining(&quot;, &quot;));</b>
+&nbsp;
+<b class="fc">&nbsp;        logger.error(&quot;Request Body Invalid: {}&quot;, message);</b>
+<b class="fc">&nbsp;        return buildResponse(message, HttpStatus.BAD_REQUEST);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Catch-all for unexpected internal errors
+&nbsp;    @ExceptionHandler(Exception.class)
+&nbsp;    public ResponseEntity&lt;ErrorResponse&gt; handleGeneralException(Exception ex) {
+<b class="nc">&nbsp;        logger.error(&quot;An unexpected error occurred&quot;, ex);</b>
+<b class="nc">&nbsp;        return buildResponse(&quot;An internal error occurred. Please contact support.&quot;, HttpStatus.INTERNAL_SERVER_ERROR);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // Helper method to centralize response creation (SRP)
+&nbsp;    private ResponseEntity&lt;ErrorResponse&gt; buildResponse(String message, HttpStatus status) {
+<b class="fc">&nbsp;        ErrorResponse error = new ErrorResponse(</b>
+&nbsp;                message
+&nbsp;//                status.value(),
+&nbsp;//                LocalDateTime.now()
+&nbsp;        );
+<b class="fc">&nbsp;        return new ResponseEntity&lt;&gt;(error, status);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-02-19 02:28</div>
+</div>
+</body>
+</html>
