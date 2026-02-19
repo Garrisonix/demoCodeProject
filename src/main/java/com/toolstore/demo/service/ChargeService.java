@@ -37,11 +37,7 @@ public class ChargeService {
             return false;
         }
 
-        if (!isWeekend && !toolType.isWeekdayCharge()) {
-            return false;
-        }
-
-        return true;
+        return isWeekend || toolType.isWeekdayCharge();
     }
 
     private boolean isWeekend(LocalDate date) {
